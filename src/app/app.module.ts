@@ -1,18 +1,24 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
+import { NgModule, Injector } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
+import { WeatherWidgetCardComponent } from './weather-widget-card/weather-widget-card.component';
+
+import { createCustomElement } from '@angular/elements';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
-  declarations: [
-    AppComponent
-  ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule
-  ],
+  declarations: [WeatherWidgetCardComponent],
+  imports: [BrowserModule, HttpClientModule],
   providers: [],
-  bootstrap: [AppComponent]
+  entryComponents: [WeatherWidgetCardComponent],
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private injector: Injector) {
+    const weather = createCustomElement(WeatherWidgetCardComponent, {
+      injector: this.injector,
+    });
+    customElements.define('gs-weather', weather);
+  }
+
+  ngDoBootstrap() {}
+}
